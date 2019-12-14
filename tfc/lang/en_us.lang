@@ -1,4 +1,10 @@
 # Command
+tfc.command.time.usage=/timetfc [add|query|set] [args...]
+tfc.command.time.usage_expected_first_argument=Expected [add|query|set] after /timetfc
+tfc.command.time.usage_expected_second_argument_query=Expected [daytime|day|gametime|playerticks|calendarticks] after /timetfc query
+tfc.command.time.usage_expected_second_argument_set=Expected [day|night|monthlength <value>] after /timetfc set
+tfc.command.time.usage_expected_second_argument_add=Expected [days|months|years|] <value> after /timetfc add
+tfc.command.time.set_month_length=Set Month Length to %d Days / Month
 
 # Gui
 
@@ -10,7 +16,8 @@ tfc.tooltip.oredictionaryentries=§fOre Dictionary names:
 tfc.tooltip.metal=§fMetal:§7 %s
 tfc.tooltip.units=%d units
 tfc.tooltip.smelting=Smelt in %s
-tfc.tooltip.liquid=Liquid
+tfc.tooltip.liquid= - Liquid
+tfc.tooltip.solid= - Solid
 tfc.tooltip.barrel_empty=Empty
 tfc.tooltip.barrel_fluid=Contains %1$d mB of %2$s
 tfc.tooltip.barrel_fluid_amount=%d mB
@@ -34,7 +41,8 @@ tfc.tooltip.calendar=Calendar
 tfc.tooltip.season=Season : %s
 tfc.tooltip.day=Day : %s
 tfc.tooltip.date=Date : %s
-tfc.tooltip.debug_times=TT: %d | PT: %d | CT: %d
+tfc.tooltip.calendar_full_date=%s %s %02d, %04d
+tfc.tooltip.debug_times=PT: %d | CT: %d
 tfc.tooltip.food_expiry_date=Expires on: %s
 tfc.tooltip.food_rotten=Rotten - I wouldn't eat that.
 tfc.tooltip.food_infinite_expiry=Never Expires
@@ -51,6 +59,8 @@ tfc.tooltip.blast_furnace_melt_amount=Melt
 tfc.tooltip.large_vessel_seal=Seal Large Vessel
 tfc.tooltip.large_vessel_unseal=Unseal Large Vessel
 tfc.tooltip.goldpan.chunkworked=This area seems to be overworked. You probably wouldn't find much.
+tfc.tooltip.smithing_skill=Skill Bonus: %0.1f%%
+tfc.tooltip.crucible_alloy=Contains %1$d mB of %2$s
 
 ## Animal Tooltips / Messages
 tfc.tooltip.animal.old=This animal is too old to mate.
@@ -69,6 +79,8 @@ tfc.tooltip.set_month_length=Set Month Length to %d days.
 tfc.tooltip.time_command_set_player_time=Set Player Time to %d.
 tfc.tooltip.time_command_set_calendar_time=Set Calendar Time to %s.
 tfc.tooltip.time_command_disabled=This command has been disabled by TFC. Use /timetfc instead!
+tfc.tooltip.skill_set=Set %s to level %.2f
+tfc.tooltip.skill_add=Added %.2f levels to %s
 
 ## Prospecting Result Messages
 tfc.propick.found=Found
@@ -89,8 +101,20 @@ tfc.food_traits.brined=Brined
 tfc.food_traits.brined_active=Brining
 tfc.food_traits.salted=Salted
 tfc.food_traits.pickled=Pickled
-tfc.food_traits.pickled_active=Pickling
 tfc.food_traits.preserved=Preserved
+tfc.tooltip.barrel_recipe_pickling=Pickling
+tfc.tooltip.barrel_recipe_brining=Brining
+
+## Skills
+tfc.skill.prospecting=Prospecting: %s
+tfc.skill.smithing=Smithing: %s
+tfc.skill.agriculture=Agriculture: %s
+tfc.skill.butchering=Butchering: %s
+
+tfc.enum.skilltier.novice=Novice
+tfc.enum.skilltier.adept=Adept
+tfc.enum.skilltier.expert=Expert
+tfc.enum.skilltier.master=Master
 
 ## Keybindings
 tfc.key.craft=Crafting GUI
@@ -238,20 +262,38 @@ config.tfc.general.forceNoVanillaNaturalRegeneration.tooltip=If true, this will 
 config.tfc.general.peacefulDifficultyPassiveRegeneration=Peaceful Difficulty Passive Stats Regen
 config.tfc.general.peacefulDifficultyPassiveRegeneration.tooltip=Should the player receive passive regeneration of health, food, and thirst, while in peaceful mode similar to vanilla?
 
-config.tfc.general.regenSticksRocks=Stick And Rocks Regeneration
-config.tfc.general.regenSticksRocks.tooltip=How fast sticks and rocks regenerate, in scale of days. Use 0 to disable it entirely.
+config.tfc.general.worldRegenerationMinimumTime=World Regeneration Min Time
+config.tfc.general.worldRegenerationMinimumTime.tooltip=The minimum time for a chunk to be unoccupied for it's resources to begin to naturally regenerate. (In days). After this amount, regeneration will scale up based on how long since this duration, up to a maximum of 4x
 
-config.tfc.general.regenPlants=Plants Regeneration
-config.tfc.general.regenPlants.tooltip=How fast plants regenerate, in scale of months. Use 0 to disable it entirely.
+config.tfc.general.worldRegenerationSticksRocksModifier=World Regeneration Debris Modifier
+config.tfc.general.worldRegenerationSticksRocksModifier.tooltip=The weight for loose rocks and sticks regeneration in the world.
 
-config.tfc.general.regenCrops=Wild Crops and Berry Bushes Regeneration
-config.tfc.general.regenCrops.tooltip=How fast wild crops and berry bushes regenerate, in scale of months. Use 0 to disable it entirely.
+config.tfc.general.foodDecayStackTime=Food Decay Stack Time
+config.tfc.general.foodDecayStackTime.tooltip=The number of hours to which initial food decay will be synced. When a food item is dropped, it's initial expiration date will be rounded to the closest multiple of this (in hours).
+
+config.tfc.general.foodPassiveExhaustionMultiplier=Hunger Passive Exhaustion Multiplier
+config.tfc.general.foodPassiveExhaustionMultiplier.tooltip=A multiplier for passive exhaustion (how fast your hunger decays. 0 = hunger doesn't decay passively, higher values = faster decay.
+
+config.tfc.general.oreDictIron=Iron Ore Dictionary in Wrought Iron
+config.tfc.general.oreDictIron.tooltip=Add iron ore dictionary to wrought iron items?
+
+config.tfc.general.oreDictPlate=Plate Ore Dictionary in Sheets
+config.tfc.general.oreDictPlate.tooltip=Add plate ore dictionary to sheet items?
+
+config.tfc.general.spawnProtectionEnable=Enable Spawn Protection
+config.tfc.general.spawnProtectionEnable.tooltip=Should living in a chunk block hostile mob spawning over time?
+
+config.tfc.general.spawnProtectionMinY=Spawn Protection Minimum Y Level
+config.tfc.general.spawnProtectionMinY.tooltip=The min Y value a spawn has to be for spawn protection to be considered. (spawns under this level won't be stopped by spawn protection.
+
+config.tfc.general.charcoalPitTime=Charcoal Pit Ticks
+config.tfc.general.charcoalPitTime.tooltip=The time required for a charcoal pit to complete
+
 
 ## Client Config
 config.tfc.general.woodenBucketWhitelist=Wooden Bucket Fluid Whitelist
 config.tfc.general.woodenBucketWhitelist.tooltip=Allowed fluids to be picked up by the wooden bucket.
 
-## Config.Client
 config.tfc.client=Client Settings
 config.tfc.client.toolip=Client side only.
 
@@ -294,6 +336,15 @@ config.tfc.world.clayRarity.tooltip=The rarity for clay pits to occur. On averag
 
 config.tfc.world.looseRocksFrequency=Loose Rocks Frequency
 config.tfc.world.looseRocksFrequency.tooltip=The number of attempts per chunk to spawn loose rocks. Includes surface ore samples.
+
+config.tfc.world.rainfallSpreadFactor=Rainfall Spread Factor
+config.tfc.world.rainfallSpreadFactor.tooltip=This controls how spread the rainfall distribution is. Higher values mean the world will be distributed towards the extremes more. WARNING: This is can cause very weird world generation conditions.
+
+config.tfc.world.floraDiversitySpreadFactor=Flora Diversity Spread Factor
+config.tfc.world.floraDiversitySpreadFactor.tooltip=This controls how spread the flora diversity distribution is. Higher values mean the world will be distributed towards the extremes more. WARNING: This is can cause very weird world generation conditions.
+
+config.tfc.world.floraDensitySpreadFactor=Flora Density Spread Factor
+config.tfc.world.floraDensitySpreadFactor.tooltip=This controls how spread the flora density distribution is. Higher values mean the world will be distributed towards the extremes more. WARNING: This is can cause very weird world generation conditions.
 
 # Misc
 itemGroup.tfc.misc=TFC Misc
@@ -495,6 +546,7 @@ fluid.brine=Brine
 fluid.olive_oil=Olive Oil
 fluid.tannin=Tannin
 fluid.limewater=Limewater
+fluid.milk=Milk
 fluid.milk_curdled=Curdled Milk
 fluid.milk_vinegar=Vinegar Milk
 fluid.bismuth=Molten Bismuth
@@ -551,6 +603,7 @@ tile.tfc.ceramics.fired.large_vessel.name=Large Vessel
 tile.tfc.sluice.name=Sluice
 tile.tfc.ice.name=Ice
 tile.tfc.sea_ice.name=Sea Ice
+tile.tfc.nest_box.name=Nest Box
 
 ## Stone types & variaties, Wood, Stairs, Slabs, ....
 tile.tfc.raw.granite.name=Raw Granite
@@ -2615,6 +2668,26 @@ item.tfc.wood.lumber.rosewood.name=Rosewood Lumber
 item.tfc.wood.lumber.blackwood.name=Blackwood Lumber
 item.tfc.wood.lumber.palm.name=Palm Lumber
 
+item.tfc.wood.boat.ash.name=Ash Boat
+item.tfc.wood.boat.aspen.name=Aspen Boat
+item.tfc.wood.boat.birch.name=Birch Boat
+item.tfc.wood.boat.chestnut.name=Chestnut Boat
+item.tfc.wood.boat.douglas_fir.name=Douglas Fir Boat
+item.tfc.wood.boat.hickory.name=Hickory Boat
+item.tfc.wood.boat.maple.name=Maple Boat
+item.tfc.wood.boat.oak.name=Oak Boat
+item.tfc.wood.boat.pine.name=Pine Boat
+item.tfc.wood.boat.sequoia.name=Sequoia Boat
+item.tfc.wood.boat.spruce.name=Spruce Boat
+item.tfc.wood.boat.sycamore.name=Sycamore Boat
+item.tfc.wood.boat.white_cedar.name=White Cedar Boat
+item.tfc.wood.boat.willow.name=Willow Boat
+item.tfc.wood.boat.kapok.name=Kapok Boat
+item.tfc.wood.boat.acacia.name=Acacia Boat
+item.tfc.wood.boat.rosewood.name=Rosewood Boat
+item.tfc.wood.boat.blackwood.name=Blackwood Boat
+item.tfc.wood.boat.palm.name=Palm Boat
+
 item.tfc.wood.door.ash.name=Ash Door
 item.tfc.wood.door.aspen.name=Aspen Door
 item.tfc.wood.door.birch.name=Birch Door
@@ -2635,19 +2708,19 @@ item.tfc.wood.door.rosewood.name=Rosewood Door
 item.tfc.wood.door.blackwood.name=Blackwood Door
 item.tfc.wood.door.palm.name=Palm Door
 
-item.tfc.gem.agate.normal.name=Normal Agate
-item.tfc.gem.amethyst.normal.name=Normal Amethyst
-item.tfc.gem.beryl.normal.name=Normal Beryl
-item.tfc.gem.diamond.normal.name=Normal Diamond
-item.tfc.gem.emerald.normal.name=Normal Emerald
-item.tfc.gem.garnet.normal.name=Normal Garnet
-item.tfc.gem.jade.normal.name=Normal Jade
-item.tfc.gem.jasper.normal.name=Normal Jasper
-item.tfc.gem.opal.normal.name=Normal Opal
-item.tfc.gem.ruby.normal.name=Normal Ruby
-item.tfc.gem.sapphire.normal.name=Normal Sapphire
-item.tfc.gem.topaz.normal.name=Normal Topaz
-item.tfc.gem.tourmaline.normal.name=Normal Tourmaline
+item.tfc.gem.agate.normal.name=Agate
+item.tfc.gem.amethyst.normal.name=Amethyst
+item.tfc.gem.beryl.normal.name=Beryl
+item.tfc.gem.diamond.normal.name=Diamond
+item.tfc.gem.emerald.normal.name=Emerald
+item.tfc.gem.garnet.normal.name=Garnet
+item.tfc.gem.jade.normal.name=Jade
+item.tfc.gem.jasper.normal.name=Jasper
+item.tfc.gem.opal.normal.name=Opal
+item.tfc.gem.ruby.normal.name=Ruby
+item.tfc.gem.sapphire.normal.name=Sapphire
+item.tfc.gem.topaz.normal.name=Topaz
+item.tfc.gem.tourmaline.normal.name=Tourmaline
 
 item.tfc.gem.agate.flawed.name=Flawed Agate
 item.tfc.gem.amethyst.flawed.name=Flawed Amethyst
@@ -3305,14 +3378,14 @@ item.tfc.goldpan.gravel.name=Goldpan with Gravel
 
 item.tfc.powder.flux.name=Flux
 item.tfc.powder.coke.name=Coke
-item.tfc.powder.kaolinite_powder.name=Kaolinite Powder
-item.tfc.powder.graphite_powder.name=Graphite Powder
-item.tfc.powder.sulfur_powder.name=Sulfur Powder
-item.tfc.powder.saltpeter_powder.name=Saltpeter Powder
-item.tfc.powder.hematite_powder.name=Hematite Powder
-item.tfc.powder.lapis_lazuli_powder.name=Lapis Lazuli Powder
-item.tfc.powder.limonite_powder.name=Limonite Powder
-item.tfc.powder.malachite_powder.name=Malachite Powder
+item.tfc.powder.kaolinite.name=Kaolinite Powder
+item.tfc.powder.graphite.name=Graphite Powder
+item.tfc.powder.sulfur.name=Sulfur Powder
+item.tfc.powder.saltpeter.name=Saltpeter Powder
+item.tfc.powder.hematite.name=Hematite Powder
+item.tfc.powder.lapis_lazuli.name=Lapis Lazuli Powder
+item.tfc.powder.limonite.name=Limonite Powder
+item.tfc.powder.malachite.name=Malachite Powder
 item.tfc.powder.salt.name=Salt
 item.tfc.powder.fertilizer.name=Fertilizer
 
@@ -3367,8 +3440,8 @@ item.tfc.ceramics.fired.mold.scythe_blade.name=Scythe Blade Mold
 item.tfc.ceramics.fired.mold.pick_head.bronze.name=Bronze Pick Head Mold
 item.tfc.ceramics.fired.mold.shovel_head.bronze.name=Bronze Shovel Head Mold
 item.tfc.ceramics.fired.mold.axe_head.bronze.name=Bronze Axe Head Mold
-item.tfc.ceramics.fired.mold.hoe_head.bronze.name=BronzeHoe Head Mold
-item.tfc.ceramics.fired.mold.chisel_head.bronze.name=BronzeChisel Head Mold
+item.tfc.ceramics.fired.mold.hoe_head.bronze.name=Bronze Hoe Head Mold
+item.tfc.ceramics.fired.mold.chisel_head.bronze.name=Bronze Chisel Head Mold
 item.tfc.ceramics.fired.mold.sword_blade.bronze.name=Bronze Sword Blade Mold
 item.tfc.ceramics.fired.mold.mace_head.bronze.name=Bronze Mace Head Mold
 item.tfc.ceramics.fired.mold.saw_blade.bronze.name=Bronze Saw Blade Mold
@@ -3381,8 +3454,8 @@ item.tfc.ceramics.fired.mold.scythe_blade.bronze.name=Bronze Scythe Blade Mold
 item.tfc.ceramics.fired.mold.pick_head.black_bronze.name=Black Bronze Pick Head Mold
 item.tfc.ceramics.fired.mold.shovel_head.black_bronze.name=Black Bronze Shovel Head Mold
 item.tfc.ceramics.fired.mold.axe_head.black_bronze.name=Black Bronze Axe Head Mold
-item.tfc.ceramics.fired.mold.hoe_head.black_bronze.name=Black BronzeHoe Head Mold
-item.tfc.ceramics.fired.mold.chisel_head.black_bronze.name=Black BronzeChisel Head Mold
+item.tfc.ceramics.fired.mold.hoe_head.black_bronze.name=Black Bronze Hoe Head Mold
+item.tfc.ceramics.fired.mold.chisel_head.black_bronze.name=Black Bronze Chisel Head Mold
 item.tfc.ceramics.fired.mold.sword_blade.black_bronze.name=Black Bronze Sword Blade Mold
 item.tfc.ceramics.fired.mold.mace_head.black_bronze.name=Black Bronze Mace Head Mold
 item.tfc.ceramics.fired.mold.saw_blade.black_bronze.name=Black Bronze Saw Blade Mold
@@ -3395,8 +3468,8 @@ item.tfc.ceramics.fired.mold.scythe_blade.black_bronze.name=Black Bronze Scythe 
 item.tfc.ceramics.fired.mold.pick_head.bismuth_bronze.name=Bismuth Bronze Pick Head Mold
 item.tfc.ceramics.fired.mold.shovel_head.bismuth_bronze.name=Bismuth Bronze Shovel Head Mold
 item.tfc.ceramics.fired.mold.axe_head.bismuth_bronze.name=Bismuth Bronze Axe Head Mold
-item.tfc.ceramics.fired.mold.hoe_head.bismuth_bronze.name=Bismuth BronzeHoe Head Mold
-item.tfc.ceramics.fired.mold.chisel_head.bismuth_bronze.name=Bismuth BronzeChisel Head Mold
+item.tfc.ceramics.fired.mold.hoe_head.bismuth_bronze.name=Bismuth Bronze Hoe Head Mold
+item.tfc.ceramics.fired.mold.chisel_head.bismuth_bronze.name=Bismuth Bronze Chisel Head Mold
 item.tfc.ceramics.fired.mold.sword_blade.bismuth_bronze.name=Bismuth Bronze Sword Blade Mold
 item.tfc.ceramics.fired.mold.mace_head.bismuth_bronze.name=Bismuth Bronze Mace Head Mold
 item.tfc.ceramics.fired.mold.saw_blade.bismuth_bronze.name=Bismuth Bronze Saw Blade Mold
@@ -3409,8 +3482,8 @@ item.tfc.ceramics.fired.mold.scythe_blade.bismuth_bronze.name=Bismuth Bronze Scy
 item.tfc.ceramics.fired.mold.pick_head.copper.name=Copper Pick Head Mold
 item.tfc.ceramics.fired.mold.shovel_head.copper.name=Copper Shovel Head Mold
 item.tfc.ceramics.fired.mold.axe_head.copper.name=Copper Axe Head Mold
-item.tfc.ceramics.fired.mold.hoe_head.copper.name=CopperHoe Head Mold
-item.tfc.ceramics.fired.mold.chisel_head.copper.name=CopperChisel Head Mold
+item.tfc.ceramics.fired.mold.hoe_head.copper.name=Copper Hoe Head Mold
+item.tfc.ceramics.fired.mold.chisel_head.copper.name=Copper Chisel Head Mold
 item.tfc.ceramics.fired.mold.sword_blade.copper.name=Copper Sword Blade Mold
 item.tfc.ceramics.fired.mold.mace_head.copper.name=Copper Mace Head Mold
 item.tfc.ceramics.fired.mold.saw_blade.copper.name=Copper Saw Blade Mold
@@ -3445,7 +3518,7 @@ item.tfc.ceramics.fired.vessel_glazed.yellow.name=Small Yellow Vessel
 item.tfc.ceramics.fired.vessel_glazed.lime.name=Small Lime Vessel
 item.tfc.ceramics.fired.vessel_glazed.pink.name=Small Pink Vessel
 item.tfc.ceramics.fired.vessel_glazed.gray.name=Small Gray Vessel
-item.tfc.ceramics.fired.vessel_glazed.silver.name=Small Silver Vessel
+item.tfc.ceramics.fired.vessel_glazed.silver.name=Small Light Gray Vessel
 item.tfc.ceramics.fired.vessel_glazed.cyan.name=Small Cyan Vessel
 item.tfc.ceramics.fired.vessel_glazed.purple.name=Small Purple Vessel
 item.tfc.ceramics.fired.vessel_glazed.blue.name=Small Blue Vessel
@@ -3461,7 +3534,7 @@ item.tfc.ceramics.unfired.vessel_glazed.yellow.name=Small Unfired Yellow Vessel
 item.tfc.ceramics.unfired.vessel_glazed.lime.name=Small Unfired Lime Vessel
 item.tfc.ceramics.unfired.vessel_glazed.pink.name=Small Unfired Pink Vessel
 item.tfc.ceramics.unfired.vessel_glazed.gray.name=Small Unfired Gray Vessel
-item.tfc.ceramics.unfired.vessel_glazed.silver.name=Small Unfired Silver Vessel
+item.tfc.ceramics.unfired.vessel_glazed.silver.name=Small Unfired Light Gray Vessel
 item.tfc.ceramics.unfired.vessel_glazed.cyan.name=Small Unfired Cyan Vessel
 item.tfc.ceramics.unfired.vessel_glazed.purple.name=Small Unfired Purple Vessel
 item.tfc.ceramics.unfired.vessel_glazed.blue.name=Small Unfired Blue Vessel
@@ -3636,3 +3709,5 @@ entity.wolftfc.name=Wolf
 entity.horsetfc.name=Horse
 entity.donkeytfc.name=Donkey
 entity.muletfc.name=Mule
+
+death.attack.dehydration=%1$s died of dehydration
